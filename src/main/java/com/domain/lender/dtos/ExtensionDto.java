@@ -4,16 +4,10 @@ import java.time.LocalDate;
 
 public class ExtensionDto {
 
-	/**
-	 * Must be null in request.
-	 * Not null ir response.
-	 */
+	/** Null in request, not null in response */
 	private Long id;
 
-	/**
-	 * Can be null or not null in request.
-	 * Not null ir response.
-	 */
+	/** Null or not null in request. Not null ir response. */
 	private LocalDate term;
 
 	public Long getId() {

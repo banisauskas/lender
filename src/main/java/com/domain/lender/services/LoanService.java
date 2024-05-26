@@ -11,9 +11,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -42,10 +40,6 @@ public class LoanService {
 
 	@Value("${lender.extension-factor}")
 	private BigDecimal extensionFactor;
-
-	private LocalDate ipDay;
-
-	private final Map<String, Long> ipLoans = new HashMap<>();
 
 	private final LoanRepository repository;
 
@@ -91,23 +85,26 @@ public class LoanService {
 
 	public LoanDto createLoan(LoanDto loan, HttpServletRequest request) {
 		LocalDate today = LocalDate.now();
+		String clientIp = request.getRemoteAddr();
 
-		validateId(loan.getId());
+		validateNulls(loan);
 		validateName(loan.getName());
 		validateAmount(loan.getAmount());
 		validateTerm(loan.getTerm(), today);
-		validateIp(request.getRemoteAddr(), today);
+		validateIp(clientIp, today);
 
-		loan = toDto(repository.save(toEntity(loan)));
+		loan = toDto(repository.save(toEntity(loan, today, clientIp)));
+
 		loan.setInterestRate(interestRate);
-
-		increaseIp(request.getRemoteAddr());
 		return loan;
 	}
 
-	private void validateId(Long id) {
-		if (id != null) {
+	private void validateNulls(LoanDto loan) {
+		if (loan.getId() != null) {
 			throw new BadRequest400("Loan 'id' must not be set.");
+		}
+		if (loan.getInterestRate() != null) {
+			throw new BadRequest400("Loan 'interestRate' must not be set.");
 		}
 	}
 
@@ -152,34 +149,23 @@ public class LoanService {
 		}
 	}
 
-	private synchronized void validateIp(String ip, LocalDate today) {
-		if (ip == null) {
+	private synchronized void validateIp(String clientIp, LocalDate today) {
+		if (clientIp == null) {
 			throw new BadRequest400("Cannot determine client IP address.");
 		}
 
-		if (!today.equals(ipDay)) { // equals returns false when null
-			ipDay = today;
-			ipLoans.clear();
-			return;
-		}
-
-		long loans = ipLoans.getOrDefault(ip, 0L);
-
-		if (loans == maxLoansIp) {
+		if (repository.countByCreatedIpAndCreatedDate(clientIp, today) >= maxLoansIp) {
 			throw new BadRequest400("Max loans per IP per day has been reached.");
 		}
 	}
 
-	private synchronized void increaseIp(String ip) {
-		long loans = ipLoans.getOrDefault(ip, 0L);
-		ipLoans.put(ip, loans + 1);
-	}
-
-	private LoanEntity toEntity(LoanDto dto) {
+	private LoanEntity toEntity(LoanDto dto, LocalDate today, String ip) {
 		var entity = new LoanEntity();
 		entity.setName(dto.getName());
 		entity.setAmount(dto.getAmount());
 		entity.setTerm(dto.getTerm());
+		entity.setCreatedDate(today);
+		entity.setCreatedIp(ip);
 		return entity;
 	}
 

@@ -4,10 +4,20 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class LoanDto {
+
+	/** Null in request, not null in response */
 	private Long id;
+
+	/** Not null */
 	private String name;
+
+	/** Not null */
 	private BigDecimal amount;
+
+	/** Null in request, not null in response */
 	private BigDecimal interestRate;
+
+	/** Not null */
 	private LocalDate term;
 
 	public Long getId() {

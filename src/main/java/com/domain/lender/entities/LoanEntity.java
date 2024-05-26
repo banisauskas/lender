@@ -28,6 +28,10 @@ public class LoanEntity {
 	@OneToMany(mappedBy = "loan", cascade = CascadeType.ALL)
 	private List<ExtensionEntity> extensions;
 
+	private LocalDate createdDate;
+
+	private String createdIp;
+
 	public Long getId() {
 		return id;
 	}
@@ -66,5 +70,21 @@ public class LoanEntity {
 
 	public void setExtensions(List<ExtensionEntity> extensions) {
 		this.extensions = extensions;
+	}
+
+	public LocalDate getCreatedDate() {
+		return createdDate;
+	}
+
+	public void setCreatedDate(LocalDate createdDate) {
+		this.createdDate = createdDate;
+	}
+
+	public String getCreatedIp() {
+		return createdIp;
+	}
+
+	public void setCreatedIp(String createdIp) {
+		this.createdIp = createdIp;
 	}
 }
