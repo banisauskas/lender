@@ -7,7 +7,6 @@ import com.domain.lender.errors.BadRequest400;
 import com.domain.lender.errors.NotFound404;
 import com.domain.lender.repositories.ExtensionRepository;
 import com.domain.lender.repositories.LoanRepository;
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;

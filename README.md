@@ -52,7 +52,7 @@ Create extension for loan `id=1` with specified term:
 ```
 POST http://localhost:8080/loans/1/extensions
 {
-    "term": "2024-10-08"
+	"term": "2024-10-08"
 }
 ```
 

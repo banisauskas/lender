@@ -7,7 +7,6 @@ import com.domain.lender.errors.BadRequest400;
 import com.domain.lender.errors.NotFound404;
 import com.domain.lender.repositories.LoanId;
 import com.domain.lender.repositories.LoanRepository;
-import jakarta.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -83,9 +82,8 @@ public class LoanService {
 		return interestRate.multiply(extensionFactor.pow(extensions));
 	}
 
-	public LoanDto createLoan(LoanDto loan, HttpServletRequest request) {
+	public LoanDto createLoan(LoanDto loan, String clientIp) {
 		LocalDate today = LocalDate.now();
-		String clientIp = request.getRemoteAddr();
 
 		validateNulls(loan);
 		validateName(loan.getName());

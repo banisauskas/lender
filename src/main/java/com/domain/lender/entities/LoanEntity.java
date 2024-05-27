@@ -16,7 +16,7 @@ import java.util.List;
 public class LoanEntity {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "loan_id_seq")
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
 	private String name;

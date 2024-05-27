@@ -15,7 +15,7 @@ import java.time.LocalDate;
 public class ExtensionEntity {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "extension_id_seq")
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
 	@ManyToOne(cascade = CascadeType.ALL)

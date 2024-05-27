@@ -25,7 +25,7 @@ public class LoanController {
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public LoanDto createLoan(@RequestBody LoanDto loan, HttpServletRequest request) {
-		return service.createLoan(loan, request);
+		return service.createLoan(loan, request.getRemoteAddr());
 	}
 
 	@GetMapping
